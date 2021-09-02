@@ -121,6 +121,7 @@ def register():
                     reg_result.config(text='Account successfully created!\nGame will load shortly.')
                     login.after(3000, lambda:window.deiconify())
                     login.after(3000, lambda:login.destroy())
+                    login.after(3000, lambda:roberry())
                 else:
                     reg_result.config(text='Passwords do not match \nenter again',fg='red')
             else:
@@ -128,7 +129,7 @@ def register():
         else:
             reg_result.config(text='Username already exists \nEnter a different one',fg='red')
 
-    reg_pass_confirm=Entry(login,width=15,bg = '#c4c3c0')
+    reg_pass_confirm=Entry(login,show='*',width=15,bg = '#c4c3c0')
     reg_pass_confirm.place(relx=0.5,rely=0.6,anchor=CENTER)
     reg_pass_confirm_label=Label(login,text='Confirm:',font=("Arial Bold",10),bg = '#3d3d3d', fg = 'white')
     reg_pass_confirm_label.place(relx=0.18,rely=0.6,anchor=CENTER)
@@ -151,6 +152,7 @@ def logincheck():
         window.deiconify()
         login.destroy()
         initialize()
+        roberry()
 
 def cancellogin():
     window.destroy()
@@ -167,7 +169,7 @@ user=Entry(login,width=15,bg = '#c4c3c0')
 user.place(relx=0.5,rely=0.4,anchor=CENTER)
 login_result=Label(login,text='',font=("Arial Bold",10), bg = '#3d3d3d', fg = 'white')
 login_result.place(relx=0.5,rely=0.85,anchor=CENTER)
-password=Entry(login,width=15,bg = '#c4c3c0')
+password=Entry(login,show='*',width=15,bg = '#c4c3c0')
 password.place(relx=0.5,rely=0.5,anchor=CENTER)
 user_label=Label(login,text="Username:",font=("Arial Bold",10), bg = '#3d3d3d', fg = 'white').place(relx=0.2,rely=0.4,anchor=CENTER)
 password_label=Label(login,text="Password:",font=("Arial Bold",10), bg = '#3d3d3d', fg = 'white').place(relx=0.198,rely=0.5,anchor=CENTER)
@@ -444,6 +446,19 @@ def start_business(name,time):
         money_hand.config(text="Money in hand : "+"{:,}".format(hand))
         saveData()
         window.after(time,lambda:start_business(name, time))
+
+def roberry():
+    def decrease_money():
+        global hand
+        if hand>5000:
+            robbed_money=randrange(100,2500,100)
+            hand-=robbed_money
+            money_hand.config(text="Money in hand : "+"{:,}".format(hand))
+            messagebox.showinfo('Robbery','{} of your money was stolen \nDeposit your money to keep it safe'.format(robbed_money))
+        saveData()
+        roberry()
+    time=randrange(60,300,60)*1000
+    window.after(time,decrease_money)
 
 #to make the businesses start working 
 def initialize():    
